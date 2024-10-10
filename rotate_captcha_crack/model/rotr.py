@@ -1,8 +1,8 @@
 import torch.nn as nn
 from torch import Tensor
-from torchvision import models
 
 from ..const import DEFAULT_CLS_NUM
+from ._unireplk import unireplknet_a
 
 
 class RotNetR(nn.Module):
@@ -19,16 +19,15 @@ class RotNetR(nn.Module):
 
         self.cls_num = cls_num
 
-        weights = models.RegNet_Y_3_2GF_Weights.DEFAULT if train else None
-        self.backbone = models.regnet_y_3_2gf(weights=weights)
+        self.backbone = unireplknet_a(in_1k_pretrained=train)
 
-        fc_channels = self.backbone.fc.in_features
-        del self.backbone.fc
-        self.backbone.fc = nn.Linear(fc_channels, cls_num)
+        fc_channels = self.backbone.head.in_features
+        del self.backbone.head
+        self.backbone.head = nn.Linear(fc_channels, cls_num)
 
         if train:
-            nn.init.kaiming_normal_(self.backbone.fc.weight)
-            nn.init.zeros_(self.backbone.fc.bias)
+            nn.init.kaiming_normal_(self.backbone.head.weight)
+            nn.init.zeros_(self.backbone.head.bias)
 
     def forward(self, x: Tensor) -> Tensor:
         """

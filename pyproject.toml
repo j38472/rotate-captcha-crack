@@ -10,6 +10,8 @@ dependencies = [
     "tomli>=2.0.0,<3;python_version<'3.11'",
     "torch>=2.0",
     "torchvision>=0.15.0",
+    "huggingface_hub",
+    "timm",
 ]
 dynamic = ["version"]
 

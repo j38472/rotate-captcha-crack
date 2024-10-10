@@ -2,7 +2,7 @@ from pathlib import Path
 
 from ...pipeline import IteratorRoot, SequenceRoot
 from ..helper import glob_imgs
-from .filter import filter
+from .filter import filter_ggstreet
 
 
 def get_paths(root: Path) -> SequenceRoot[Path]:
@@ -20,6 +20,6 @@ def get_paths(root: Path) -> SequenceRoot[Path]:
     """
 
     iterator = glob_imgs(root, ('.jpg',))
-    iterator = IteratorRoot(iterator) | filter
+    iterator = IteratorRoot(iterator) | filter_ggstreet
     sequence = SequenceRoot(list(iterator))
     return sequence
